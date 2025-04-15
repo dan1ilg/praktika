@@ -3,27 +3,8 @@
 <head>
     <title>Список компаний</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .priority-high {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .priority-medium {
-            color: #fd7e14;
-            font-weight: bold;
-        }
-        .priority-low {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .activity-badge {
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-        .contacts-cell {
-            min-width: 200px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'company_list/styles.css' %}"> 
 </head>
 <body>
     <div class="container mt-5">
