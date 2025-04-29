@@ -1,45 +1,47 @@
 from django import forms
-from .models import Company
+from .models import Company, ActivityTheme
 
 class CompanyForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Добавляем классы и атрибуты для всех полей
-        self.fields['name'].widget.attrs.update({
-            'class': 'form-control mb-3',
-            'placeholder': 'Введите название компании'
-        })
-        self.fields['region'].widget.attrs.update({
-            'class': 'form-control mb-3',
-            'placeholder': 'Введите регион'
-        })
-        self.fields['priority'].widget.attrs.update({
-            'class': 'form-control mb-3',
-            'min': '1',
-            'max': '10'
-        })
-        self.fields['contacts'].widget.attrs.update({
-            'class': 'form-control mb-3',
-            'rows': '3',
-            'placeholder': '{"phone": "+7 999 123-45-67", "email": "example@mail.com"}'
-        })
-        self.fields['activity_themes'].widget.attrs.update({
-            'class': 'form-control mb-3',
-            'placeholder': 'IT, Маркетинг, Производство'
-        })
-
     class Meta:
         model = Company
-        fields = ['name', 'region', 'priority', 'contacts', 'activity_themes']
+        fields = ['name', 'short_name', 'region', 'priority', 
+                 'phone', 'email', 'activity_themes', 'additional_contacts']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Полное название компании'
+            }),
+            'short_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Автогенерация, если оставить пустым'
+            }),
+            'region': forms.Select(attrs={'class': 'form-control'}),
+            'priority': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 1,
+                'max': 10
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '+7 XXX XXX-XX-XX'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'example@domain.com'
+            }),
+            'activity_themes': forms.SelectMultiple(attrs={
+                'class': 'form-control'
+            }),
+            'additional_contacts': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Telegram:@username\nVK:https://vk.com/username'
+            }),
+        }
         labels = {
-            'name': 'Название компании',
-            'region': 'Регион',
-            'priority': 'Приоритет (от 1 до 10)',
-            'contacts': 'Контактная информация (JSON)',
+            'short_name': 'Краткое название',
             'activity_themes': 'Виды деятельности'
         }
         help_texts = {
-            'contacts': 'Введите данные в JSON-формате',
-            'activity_themes': 'Укажите через запятую'
+            'additional_contacts': 'Каждый контакт с новой строки'
         }
-        

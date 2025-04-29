@@ -1,40 +1,85 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Добавить компанию</title>
+    <title>{{ title }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {% load static %}
     <link rel="stylesheet" href="{% static 'company_form/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 </head>
 <body>
-    <div class="container">
-        <div class="form-container">
-            <h2 class="mb-4">Добавить компанию</h2>
-            <form method="post">
-                {% csrf_token %}
+    <div class="form-container">
+        <h2 class="mb-4">{{ title }}</h2>
+        
+        <form method="post" id="company-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+            
+            <div class="form-group">
+                {{ form.short_name.label_tag }}
+                {{ form.short_name }}
+                <small class="form-help-text">Автогенерация, если оставить пустым</small>
+                {{ form.short_name.errors }}
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    {{ form.region.label_tag }}
+                    {{ form.region }}
+                    {{ form.region.errors }}
+                </div>
+                <div class="col-md-6 form-group">
+                    {{ form.priority.label_tag }}
+                    {{ form.priority }}
+                    {{ form.priority.errors }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h5>Контактная информация</h5>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        {{ form.phone.label_tag }}
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                </div>
                 
-                {% for field in form %}
                 <div class="form-group">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.help_text %}
-                    <small class="form-help-text">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% for error in field.errors %}
-                    <div class="alert alert-danger mt-2">{{ error }}</div>
-                    {% endfor %}
+                    {{ form.additional_contacts.label_tag }}
+                    {{ form.additional_contacts }}
+                    <small class="form-help-text">Каждый контакт с новой строки</small>
+                    {{ form.additional_contacts.errors }}
                 </div>
-                {% endfor %}
-                
-                <div class="btn-container">
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                    <a href="/" class="btn btn-outline-secondary">Отмена</a>
-                </div>
-            </form>
-        </div>
+            </div>
+            
+            <div class="form-group">
+                {{ form.activity_themes.label_tag }}
+                {{ form.activity_themes }}
+                {{ form.activity_themes.errors }}
+            </div>
+            
+            <div class="btn-container">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Сохранить
+                </button>
+                <a href="{% url 'company_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Отмена
+                </a>
+            </div>
+        </form>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="{% static 'company_form/script.js' %}"></script>
 </html>

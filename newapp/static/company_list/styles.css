@@ -2,18 +2,26 @@
     color: #dc3545;
     font-weight: bold;
 }
+
 .priority-medium {
     color: #fd7e14;
     font-weight: bold;
 }
+
 .priority-low {
     color: #28a745;
     font-weight: bold;
 }
+
 .activity-badge {
     margin-right: 5px;
     margin-bottom: 5px;
 }
+
 .contacts-cell {
     min-width: 200px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.03);
 }
