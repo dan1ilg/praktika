@@ -18,9 +18,6 @@ class Company(models.Model):
         ('Новосибирск', 'Новосибирск'),
         ('Екатеринбург', 'Екатеринбург'),
         ('Казань', 'Казань'),
-        ('Нижний Новгород', 'Нижний Новгород'),
-        ('Челябинск', 'Челябинск'),
-        ('Самара', 'Самара'),
     ]
 
     name = models.CharField("Название", max_length=255)
@@ -34,7 +31,7 @@ class Company(models.Model):
     phone = models.CharField("Телефон", max_length=20, blank=True)
     email = models.EmailField("Email", blank=True)
     activity_themes = models.ManyToManyField(
-        ActivityTheme, 
+        ActivityTheme,
         verbose_name="Виды деятельности",
         blank=True
     )

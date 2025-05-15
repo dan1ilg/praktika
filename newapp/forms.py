@@ -2,6 +2,13 @@ from django import forms
 from .models import Company, ActivityTheme
 
 class CompanyForm(forms.ModelForm):
+    activity_themes = forms.ModelMultipleChoiceField(
+        queryset=ActivityTheme.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        label="Виды деятельности"
+    )
+
     class Meta:
         model = Company
         fields = ['name', 'short_name', 'region', 'priority', 
@@ -28,9 +35,6 @@ class CompanyForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'example@domain.com'
-            }),
-            'activity_themes': forms.SelectMultiple(attrs={
-                'class': 'form-control'
             }),
             'additional_contacts': forms.Textarea(attrs={
                 'class': 'form-control',
