@@ -1,27 +1,151 @@
-.priority-high {
-    color: #dc3545;
-    font-weight: bold;
+
+/* Общие стили */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    padding: 0 20px;
+}
+
+/* Шапка */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.header-link {
+    text-decoration: none;
+    color: #212529;
+    transition: color 0.2s;
+}
+
+.header-link:hover {
+    color: #212529;
+    text-decoration: none;
+}
+
+/* Таблица */
+.table-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.company-table {
+    margin-bottom: 0;
+}
+
+.company-table th {
+    padding: 12px 8px;
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+.company-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+
+.company-name {
+    font-weight: 500;
+}
+
+.company-shortname {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Ссылки */
+.website-link {
+    color: #212529;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.website-link:hover {
+    color: #212529;
+    text-decoration: underline;
+}
+
+.website-link span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Приоритеты */
+.priority-low {
+    color: #28a745;
+    font-weight: 500;
 }
 
 .priority-medium {
     color: #fd7e14;
-    font-weight: bold;
+    font-weight: 500;
 }
 
-.priority-low {
-    color: #28a745;
-    font-weight: bold;
+.priority-high {
+    color: #dc3545;
+    font-weight: 600;
 }
 
+/* Бейджи */
 .activity-badge {
-    margin-right: 5px;
-    margin-bottom: 5px;
+    display: inline-block;
+    padding: 3px 8px;
+    background-color: #e9ecef;
+    color: #495057;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin: 2px;
 }
 
-.contacts-cell {
-    min-width: 200px;
+/* Кнопки */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+/* Пагинация */
+.pagination {
+    margin: 20px 0;
+}
+
+.page-link {
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .controls-container {
+        flex-direction: column;
+    }
+    
+    .search-form {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .buttons-container {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .company-table {
+        font-size: 0.9rem;
+    }
+    
+    .activity-badge {
+        font-size: 0.7rem;
+    }
 }

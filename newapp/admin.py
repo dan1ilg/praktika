@@ -11,7 +11,7 @@ class ActivityThemeAdmin(admin.ModelAdmin):
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'short_name', 'region', 'priority', 'display_activities')
-    list_filter = ('region', 'priority', 'activity_themes')
+    list_filter = ('priority', 'activity_themes')
     search_fields = ('name', 'short_name', 'region')
     filter_horizontal = ('activity_themes',)
     list_per_page = 20

@@ -28,7 +28,7 @@ class Company(models.Model):
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    phone = models.CharField("Телефон", max_length=20, blank=True)
+    website = models.URLField("Ссылка на сайт", blank=True)  # Изменено с phone на website
     email = models.EmailField("Email", blank=True)
     activity_themes = models.ManyToManyField(
         ActivityTheme,

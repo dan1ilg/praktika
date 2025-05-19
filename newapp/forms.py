@@ -12,7 +12,7 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ['name', 'short_name', 'region', 'priority', 
-                 'phone', 'email', 'activity_themes', 'additional_contacts']
+                 'website', 'email', 'activity_themes', 'additional_contacts']  # Изменено с phone на website
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -28,9 +28,9 @@ class CompanyForm(forms.ModelForm):
                 'min': 1,
                 'max': 10
             }),
-            'phone': forms.TextInput(attrs={
+            'website': forms.URLInput(attrs={  # Новое поле для сайта
                 'class': 'form-control',
-                'placeholder': '+7 XXX XXX-XX-XX'
+                'placeholder': 'https://example.com'
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
@@ -44,7 +44,8 @@ class CompanyForm(forms.ModelForm):
         }
         labels = {
             'short_name': 'Краткое название',
-            'activity_themes': 'Виды деятельности'
+            'activity_themes': 'Виды деятельности',
+            'website': 'Ссылка на сайт'  # Новый label
         }
         help_texts = {
             'additional_contacts': 'Каждый контакт с новой строки'
