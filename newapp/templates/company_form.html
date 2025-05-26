@@ -44,7 +44,7 @@
                 <h5>Контактная информация</h5>
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        {{ form.website.label_tag }}  <!-- Изменено с phone на website -->
+                        {{ form.website.label_tag }}
                         {{ form.website }}
                         {{ form.website.errors }}
                     </div>
@@ -90,5 +90,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'company_form/script.js' %}"></script>
 </body>
 </html>

@@ -1,11 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
+from django.db.models import Q
 from .models import Company
 from .forms import CompanyForm
 
 def company_list(request):
     search_query = request.GET.get('q', '')
-    companies = Company.objects.filter(name__icontains=search_query) if search_query else Company.objects.all()
+    priority_filter = request.GET.get('priority', '')
+    region_filter = request.GET.get('region', '')
+    
+    companies = Company.objects.all()
+    
+    if search_query:
+        companies = companies.filter(
+            Q(name__icontains=search_query) | 
+            Q(short_name__icontains=search_query)
+        )
+    
+    if priority_filter and priority_filter.isdigit() and 1 <= int(priority_filter) <= 10:
+        companies = companies.filter(priority=int(priority_filter))
+    
+    if region_filter:
+        companies = companies.filter(region=region_filter)
     
     paginator = Paginator(companies, 10)
     page_number = request.GET.get('page')
@@ -13,7 +29,11 @@ def company_list(request):
     
     return render(request, 'company_list.html', {
         'page_obj': page_obj,
-        'search_query': search_query
+        'search_query': search_query,
+        'priority_filter': priority_filter,
+        'region_filter': region_filter,
+        'regions': Company.REGION_CHOICES,
+        'priority_range': range(1, 11),  # Генерация чисел от 1 до 10
     })
 
 def company_create(request):
