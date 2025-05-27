@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Company, ActivityTheme
 
 class CompanyForm(forms.ModelForm):
@@ -12,7 +13,7 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = ['name', 'short_name', 'region', 'priority', 
-                 'website', 'email', 'activity_themes', 'additional_contacts']  # Изменено с phone на website
+                 'website', 'email', 'activity_themes', 'additional_contacts']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -28,7 +29,7 @@ class CompanyForm(forms.ModelForm):
                 'min': 1,
                 'max': 10
             }),
-            'website': forms.URLInput(attrs={  # Новое поле для сайта
+            'website': forms.URLInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'https://example.com'
             }),
@@ -43,10 +44,33 @@ class CompanyForm(forms.ModelForm):
             }),
         }
         labels = {
+            'region': 'Страна',
             'short_name': 'Краткое название',
             'activity_themes': 'Виды деятельности',
-            'website': 'Ссылка на сайт'  # Новый label
+            'website': 'Ссылка на сайт'
         }
         help_texts = {
             'additional_contacts': 'Каждый контакт с новой строки'
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        short_name = cleaned_data.get('short_name')
+        instance = getattr(self, 'instance', None)
+
+        if name:
+            qs = Company.objects.filter(name__iexact=name)
+            if instance and instance.pk:
+                qs = qs.exclude(pk=instance.pk)
+            if qs.exists():
+                self.add_error('name', 'Компания с таким названием уже существует')
+
+        if short_name:
+            qs = Company.objects.filter(short_name__iexact=short_name)
+            if instance and instance.pk:
+                qs = qs.exclude(pk=instance.pk)
+            if qs.exists():
+                self.add_error('short_name', 'Компания с таким кратким названием уже существует')
+
+        return cleaned_data

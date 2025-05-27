@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
 class ActivityTheme(models.Model):
     name = models.CharField("Название вида деятельности", max_length=100, unique=True)
@@ -10,6 +11,7 @@ class ActivityTheme(models.Model):
     class Meta:
         verbose_name = "Вид деятельности"
         verbose_name_plural = "Виды деятельности"
+        ordering = ['name']
 
 class Company(models.Model):
     REGION_CHOICES = [
@@ -25,15 +27,15 @@ class Company(models.Model):
         ('Канада', 'Канада'),
     ]
 
-    name = models.CharField("Название", max_length=255)
-    short_name = models.CharField("Краткое название", max_length=50, blank=True)
-    region = models.CharField("Регион", max_length=100, choices=REGION_CHOICES)
+    name = models.CharField("Название", max_length=255, unique=True)
+    short_name = models.CharField("Краткое название", max_length=50, blank=True, unique=True)
+    region = models.CharField("Страна", max_length=100, choices=REGION_CHOICES)
     priority = models.IntegerField(
         "Приоритет",
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    website = models.URLField("Ссылка на сайт", blank=True)  # Изменено с phone на website
+    website = models.URLField("Ссылка на сайт", blank=True)
     email = models.EmailField("Email", blank=True)
     activity_themes = models.ManyToManyField(
         ActivityTheme,
@@ -41,17 +43,22 @@ class Company(models.Model):
         blank=True
     )
     additional_contacts = models.TextField(
-        "Доп. контакты",
+        "Доп. сведения",
         blank=True,
         help_text="Формат: Тип:значение (например, Telegram:@example)"
     )
 
-    def __str__(self):
-        return self.name
+    def clean(self):
+        if Company.objects.filter(name__iexact=self.name).exclude(pk=self.pk).exists():
+            raise ValidationError({'name': 'Компания с таким названием уже существует'})
+        
+        if self.short_name and Company.objects.filter(short_name__iexact=self.short_name).exclude(pk=self.pk).exists():
+            raise ValidationError({'short_name': 'Компания с таким кратким названием уже существует'})
 
     def save(self, *args, **kwargs):
         if not self.short_name:
             self.short_name = self.generate_short_name()
+        self.full_clean()
         super().save(*args, **kwargs)
     
     def generate_short_name(self):

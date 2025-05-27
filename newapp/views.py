@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Company
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from .models import Company, ActivityTheme
 from .forms import CompanyForm
 
 def company_list(request):
     search_query = request.GET.get('q', '')
     priority_filter = request.GET.get('priority', '')
     region_filter = request.GET.get('region', '')
+    activity_filters = request.GET.getlist('activity')
     
-    companies = Company.objects.all()
+    companies = Company.objects.all().distinct()
+    all_activities = ActivityTheme.objects.all().order_by('name')
     
     if search_query:
         companies = companies.filter(
@@ -23,6 +27,9 @@ def company_list(request):
     if region_filter:
         companies = companies.filter(region=region_filter)
     
+    if activity_filters:
+        companies = companies.filter(activity_themes__id__in=activity_filters).distinct()
+    
     paginator = Paginator(companies, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -32,16 +39,28 @@ def company_list(request):
         'search_query': search_query,
         'priority_filter': priority_filter,
         'region_filter': region_filter,
+        'activity_filters': [int(a) for a in activity_filters],
         'regions': Company.REGION_CHOICES,
-        'priority_range': range(1, 11),  # Генерация чисел от 1 до 10
+        'priority_range': range(1, 11),
+        'all_activities': all_activities,
     })
 
 def company_create(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('company_list')
+            try:
+                form.save()
+                messages.success(request, 'Компания успешно добавлена')
+                return redirect('company_list')
+            except ValidationError as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = CompanyForm()
     
@@ -55,8 +74,18 @@ def company_edit(request, pk):
     if request.method == 'POST':
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
-            form.save()
-            return redirect('company_list')
+            try:
+                form.save()
+                messages.success(request, 'Компания успешно обновлена')
+                return redirect('company_list')
+            except ValidationError as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request, f'{field}: {error}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = CompanyForm(instance=company)
     
@@ -69,6 +98,7 @@ def company_delete(request, pk):
     company = get_object_or_404(Company, pk=pk)
     if request.method == 'POST':
         company.delete()
+        messages.success(request, 'Компания успешно удалена')
         return redirect('company_list')
     return render(request, 'company_confirm_delete.html', {
         'company': company

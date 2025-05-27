@@ -125,15 +125,6 @@ body {
 }
 
 /* Фильтры */
-.filters-container {
-    min-width: 300px;
-}
-
-.filter-select {
-    width: auto;
-    min-width: 150px;
-}
-
 .controls-container {
     display: flex;
     justify-content: space-between;
@@ -151,6 +142,27 @@ body {
     display: flex;
 }
 
+/* Модальное окно фильтров */
+#filterModal .activity-checkboxes {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#filterModal .form-check {
+    margin-bottom: 8px;
+}
+
+#filterModal .modal-body {
+    padding: 20px;
+}
+
+#filterModal .modal-footer {
+    justify-content: space-between;
+}
+
 /* Адаптивность */
 @media (max-width: 992px) {
     .controls-container {
@@ -164,26 +176,16 @@ body {
         margin-bottom: 10px;
     }
     
-    .filters-container {
-        order: 2;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
     .buttons-container {
-        order: 3;
+        order: 2;
         justify-content: flex-end;
     }
 }
 
-@media (max-width: 576px) {
-    .filters-container {
+@media (max-width: 768px) {
+    .activity-checkboxes {
         flex-direction: column;
-    }
-    
-    .filter-select {
-        width: 100%;
-        min-width: auto;
+        gap: 5px;
     }
     
     .company-table {
@@ -245,30 +247,9 @@ body {
         margin: 0.5rem auto;
         max-width: 95%;
     }
-}
-
-/* Стили для фильтров */
-.filter-select {
-    min-width: 150px;
-}
-
-.filter-select:invalid {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-}
-
-.filters-container {
-    display: flex;
-    gap: 10px;
-}
-
-@media (max-width: 768px) {
-    .filters-container {
-        flex-direction: column;
-        width: 100%;
-    }
     
-    .filter-select {
-        width: 100%;
+    #filterModal .modal-dialog {
+        margin: 0.5rem auto;
+        max-width: 95%;
     }
 }

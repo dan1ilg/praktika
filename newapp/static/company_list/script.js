@@ -6,12 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
         contactsModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget;
             
-            // Очищаем предыдущие данные
             document.getElementById('modalWebsite').innerHTML = '';
             document.getElementById('modalEmail').innerHTML = '';
             document.getElementById('modalAdditional').innerHTML = '';
             
-            // Заполняем данные
             if (button.getAttribute('data-website')) {
                 document.getElementById('modalWebsite').innerHTML = 
                     '<p><i class="bi bi-globe me-2"></i><strong>Сайт:</strong> ' + 
@@ -27,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (button.getAttribute('data-additional')) {
                 var additionalContacts = button.getAttribute('data-additional').split('\n');
-                var additionalHtml = '<div class="mt-3"><strong>Дополнительные контакты:</strong><ul class="list-unstyled">';
+                var additionalHtml = '<div class="mt-3"><strong>Дополнительные сведения:</strong><ul class="list-unstyled">';
                 
                 additionalContacts.forEach(function(contact) {
                     if (contact.trim()) {
@@ -41,40 +39,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Валидация приоритета
-    const prioritySelect = document.querySelector('select[name="priority"]');
-    if (prioritySelect) {
-        prioritySelect.addEventListener('change', function() {
-            const value = this.value;
-            if (value && !/^(10|[1-9])$/.test(value)) {
-                this.value = '';
-                alert('Приоритет должен быть числом от 1 до 10');
-            }
-        });
-    }
-
-    // Сохраняем фильтры при отправке формы поиска
-    const searchForm = document.querySelector('.search-form');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(e) {
-            const priorityFilter = document.querySelector('select[name="priority"]').value;
-            const regionFilter = document.querySelector('select[name="region"]').value;
+    // Обработка формы фильтров в модальном окне
+    const filterForm = document.getElementById('filterForm');
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            if (priorityFilter) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'priority';
-                input.value = priorityFilter;
-                this.appendChild(input);
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            
+            for (const [key, value] of formData.entries()) {
+                if (value) {
+                    if (key === 'activity') {
+                        formData.getAll(key).forEach(val => params.append(key, val));
+                    } else {
+                        params.append(key, value);
+                    }
+                }
             }
             
-            if (regionFilter) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'region';
-                input.value = regionFilter;
-                this.appendChild(input);
-            }
+            const modal = bootstrap.Modal.getInstance(document.getElementById('filterModal'));
+            modal.hide();
+            
+            window.location.href = `${window.location.pathname}?${params.toString()}`;
         });
     }
 
