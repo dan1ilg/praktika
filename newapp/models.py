@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.db.models import Index
 
 class ActivityTheme(models.Model):
     name = models.CharField("Название вида деятельности", max_length=100, unique=True)
@@ -68,3 +69,8 @@ class Company(models.Model):
         verbose_name = "Компания"
         verbose_name_plural = "Компании"
         ordering = ['name']
+        indexes = [
+            Index(fields=['name']),
+            Index(fields=['short_name']),
+            Index(fields=['additional_contacts']),  # Добавляем индекс для поиска
+        ]

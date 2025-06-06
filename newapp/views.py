@@ -18,8 +18,10 @@ def company_list(request):
     if search_query:
         companies = companies.filter(
             Q(name__icontains=search_query) | 
-            Q(short_name__icontains=search_query)
+            Q(short_name__icontains=search_query) |
+             Q(additional_contacts__icontains=search_query)
         )
+        
     
     if priority_filter and priority_filter.isdigit() and 1 <= int(priority_filter) <= 10:
         companies = companies.filter(priority=int(priority_filter))
